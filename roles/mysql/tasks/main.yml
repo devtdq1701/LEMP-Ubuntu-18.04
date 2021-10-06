@@ -1,0 +1,8 @@
+---
+- name: install MySQL packages
+  apt: pkg={{ item }} update_cache=yes state=latest
+  with_items: "{{ mysql_packages }}"
+
+- name: Create my.cnf file with root password credentials
+  template: src="templates/my.cnf.j2" dest="/root/.my.cnf" owner=root group=root mode=0600
+  notify: restart mysql

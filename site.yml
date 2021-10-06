@@ -1,0 +1,10 @@
+---
+- hosts: ubuntu
+  become: yes
+  user: root
+  roles:
+    - preinstall
+    - nginx
+    - mysql
+    - php
+    - ufw

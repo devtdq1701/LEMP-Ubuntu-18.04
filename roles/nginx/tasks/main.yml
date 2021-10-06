@@ -1,0 +1,38 @@
+---
+# Nginx Configuration
+    - name: apt-get update and install nginx
+      apt: name=nginx state=latest update_cache=true
+      register: nginxinstalled
+
+    - name: Creates directory for customize website
+      file:
+        path: "/var/www/{{ http_host }}"
+        state: directory
+
+    - name: Sets Nginx conf file
+      template:
+        src: "templates/nginx.conf.j2"
+        dest: "/etc/nginx/sites-available/{{ http_host }}"
+
+    - name: Enables new site
+      file:
+        src: "/etc/nginx/sites-available/{{ http_host }}"
+        dest: "/etc/nginx/sites-enabled/{{ http_host }}"
+        state: link
+      notify: reload nginx
+
+    - name: Removes "default" site
+      file:
+        path: "/etc/nginx/sites-enabled/default"
+        state: absent
+      notify: reload nginx
+
+    - name: Create index.html for site
+      template:
+        src: "templates/index.html.j2"
+        dest: "/var/www/{{ http_host }}/index.html"
+
+    - name: Sets Up PHP Info Page
+      template:
+        src: "templates/info.php.j2"
+        dest: "/var/www/{{ http_host }}/info.php"

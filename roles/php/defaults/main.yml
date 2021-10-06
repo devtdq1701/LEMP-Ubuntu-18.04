@@ -1,0 +1,4 @@
+---
+php_packages:
+  - php-fpm
+  - php-mysql
